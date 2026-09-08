@@ -1,5 +1,10 @@
 # ⚡ LuminaMarket - Modern Full-Stack AI-Powered E-Commerce Platform
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-lumina--ecomm.vercel.app-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://lumina-ecomm.vercel.app/)
+
+> 🚀 **Live Demo**: [https://lumina-ecomm.vercel.app/](https://lumina-ecomm.vercel.app/)  
+> ⚡ **Backend API**: [https://lumina-backend-hmqx.onrender.com](https://lumina-backend-hmqx.onrender.com)
+
 A production-grade, full-stack E-Commerce application built with the **MERN** stack (MongoDB, Express, React, Node.js), powered by **Native ES Modules**, **Tailwind CSS v4**, **Redux Toolkit**, and **Lumina AI** (featuring Google Gemini 2.5 Flash, OpenAI GPT-4o-mini, and an intelligent in-house fallback catalog engine).
 
 ---
@@ -152,6 +157,8 @@ npm install
 npm run dev
 # App runs on http://localhost:3000
 ```
+
+> 🌐 **Production Deployment**: The frontend is deployed live on Vercel at [https://lumina-ecomm.vercel.app/](https://lumina-ecomm.vercel.app/).
 
 ---
 
