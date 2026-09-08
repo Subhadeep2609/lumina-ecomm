@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyEmailUser, resendOtpUser } from './authSlice.js';
 import { closeModal } from '../ui/uiSlice.js';
-import { Mail, RefreshCw, X, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Mail, RefreshCw, X, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react';
 
 const VerifyEmail = () => {
   const dispatch = useDispatch();
@@ -10,6 +10,16 @@ const VerifyEmail = () => {
   const { pendingEmailVerification, loading } = useSelector((state) => state.auth);
 
   const [otp, setOtp] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && activeModal === 'VERIFY_EMAIL') {
+        dispatch(closeModal());
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeModal, dispatch]);
 
   if (activeModal !== 'VERIFY_EMAIL') return null;
 
@@ -27,43 +37,47 @@ const VerifyEmail = () => {
   return (
     <div className="modal-overlay" onClick={() => dispatch(closeModal())}>
       <div
-        className="modal-card max-w-md w-full bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6"
+        className="modal-card max-w-[440px] w-full mx-auto bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 font-body"
+        style={{ maxWidth: '440px' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between pb-3 border-b border-gray-100">
+        <div className="flex items-start justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-50 text-cyan-600 border border-cyan-100 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
               <Mail size={20} />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold font-heading text-gray-900">Verify Email OTP</h2>
-              <p className="text-xs text-gray-500">Security code dispatched via Nodemailer</p>
+              <h2 className="text-xl font-black font-heading text-slate-900 leading-tight">Verify Email OTP</h2>
+              <p className="text-xs text-slate-500 font-medium">Enter the 6-digit code sent to your inbox</p>
             </div>
           </div>
-          <button onClick={() => dispatch(closeModal())} className="p-1 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
+          <button
+            onClick={() => dispatch(closeModal())}
+            className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition"
+            aria-label="Close modal"
+          >
             <X size={20} />
           </button>
         </div>
 
-        <div className="p-4 bg-cyan-50/50 border border-cyan-100 rounded-2xl space-y-1.5 text-xs">
-          <div className="flex items-center gap-2 text-cyan-700 font-bold text-sm">
+        <div className="p-4 bg-indigo-50/60 border border-indigo-100 rounded-2xl space-y-1 text-xs">
+          <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm">
             <ShieldCheck size={16} />
             <span>Check Your Email Inbox</span>
           </div>
-          <p className="text-gray-600 leading-relaxed">
-            We sent a 6-digit verification code to <strong className="text-gray-900 font-mono">{emailToVerify}</strong>.
-            Please copy the code from your email inbox and enter it below.
+          <p className="text-slate-600 leading-relaxed font-medium">
+            We sent a 6-digit verification code to <strong className="text-slate-900 font-semibold">{emailToVerify}</strong>.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block text-center">Enter 6-Digit Security OTP</label>
+            <label className="text-xs font-bold text-slate-700 block text-center">6-Digit Verification OTP</label>
             <input
               type="text"
               required
               maxLength={6}
-              className="w-full py-3 text-center text-2xl font-black tracking-[8px] bg-gray-50 border border-gray-200 rounded-2xl text-[#5B3DF5] outline-none focus:bg-white focus:border-[#5B3DF5] focus:ring-2 focus:ring-[#5B3DF5]/20 transition font-mono shadow-sm"
+              className="w-full py-3 text-center text-2xl font-mono font-black tracking-[8px] bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition shadow-xs"
               placeholder="000000"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
@@ -73,18 +87,18 @@ const VerifyEmail = () => {
           <button
             type="submit"
             disabled={loading || otp.length < 6}
-            className="w-full py-3.5 bg-[#5B3DF5] hover:bg-[#4c31cf] text-white font-extrabold rounded-xl text-sm shadow-md shadow-[#5B3DF5]/20 flex items-center justify-center gap-2 transition disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-xl text-sm shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-[0.99] disabled:opacity-50 cursor-pointer"
           >
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
             <span>{loading ? 'Verifying Code...' : 'Verify OTP & Activate Account'}</span>
-            {!loading && <ArrowRight size={16} />}
           </button>
         </form>
 
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-xs">
-          <span className="text-gray-500 font-medium">Didn't receive the code?</span>
+        <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+          <span className="text-slate-500 font-medium">Didn't receive the code?</span>
           <button
             type="button"
-            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl flex items-center gap-1 transition"
+            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center gap-1.5 transition cursor-pointer"
             onClick={handleResend}
           >
             <RefreshCw size={13} /> Resend OTP Email

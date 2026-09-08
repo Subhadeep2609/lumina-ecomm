@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from './authSlice.js';
 import { closeModal, openModal } from '../ui/uiSlice.js';
-import { User, Mail, Lock, X, Sparkles, UserCheck, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Lock, X, Sparkles, UserCheck, Store, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import GoogleAuthButton from '../../components/GoogleAuthButton.jsx';
 
 const Register = () => {
@@ -19,6 +19,16 @@ const Register = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && activeModal === 'REGISTER') {
+        dispatch(closeModal());
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeModal, dispatch]);
+
   if (activeModal !== 'REGISTER') return null;
 
   const handleSubmit = (e) => {
@@ -29,24 +39,26 @@ const Register = () => {
   return (
     <div className="modal-overlay" onClick={() => dispatch(closeModal())}>
       <div
-        className="modal-card max-w-md w-full bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 font-body"
+        className="modal-card max-w-[440px] w-full mx-auto bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 font-body"
+        style={{ maxWidth: '440px' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
               <Sparkles size={20} />
             </div>
             <div>
-              <h2 className="text-xl font-black font-heading text-slate-900">Create Lumina Account</h2>
-              <p className="text-xs text-slate-500 font-medium">Verification OTP code will be sent to your email</p>
+              <h2 className="text-xl font-black font-heading text-slate-900 leading-tight">Create Account</h2>
+              <p className="text-xs text-slate-500 font-medium">Join LuminaMarket as a buyer or seller</p>
             </div>
           </div>
 
           <button
             onClick={() => dispatch(closeModal())}
             className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition"
+            aria-label="Close modal"
           >
             <X size={20} />
           </button>
@@ -61,7 +73,7 @@ const Register = () => {
                 type="text"
                 required
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition font-medium"
-                placeholder="John Doe"
+                placeholder="Alex Morgan"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -76,7 +88,7 @@ const Register = () => {
                 type="email"
                 required
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition font-medium"
-                placeholder="john@example.com"
+                placeholder="alex@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -107,33 +119,33 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Role Selection Cards: Buyer & Seller ONLY */}
-          <div className="space-y-1.5 pt-1">
-            <label className="text-xs font-bold text-gray-700 block">Account Type</label>
-            <div className="grid grid-cols-2 gap-3">
+          {/* Role Selection: Buyer & Seller only */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 block font-heading">Account Type</label>
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80">
               <button
                 type="button"
-                className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-bold transition duration-200 cursor-pointer ${
+                className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
                   formData.role === 'user'
-                    ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm scale-[1.02]'
-                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/80'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 onClick={() => setFormData({ ...formData, role: 'user' })}
               >
-                <UserCheck size={20} className="mb-1 text-blue-600" />
+                <UserCheck size={14} />
                 <span>Buyer (Consumer)</span>
               </button>
 
               <button
                 type="button"
-                className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-bold transition duration-200 cursor-pointer ${
+                className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
                   formData.role === 'seller'
-                    ? 'bg-purple-50 border-purple-500 text-purple-700 shadow-sm scale-[1.02]'
-                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    ? 'bg-white text-purple-600 shadow-xs border border-slate-200/80'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 onClick={() => setFormData({ ...formData, role: 'seller' })}
               >
-                <Sparkles size={20} className="mb-1 text-purple-600" />
+                <Store size={14} />
                 <span>Seller (Merchant)</span>
               </button>
             </div>
@@ -142,16 +154,16 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-[#5B3DF5] hover:bg-[#4c31cf] text-white font-extrabold rounded-xl text-sm shadow-md shadow-[#5B3DF5]/20 flex items-center justify-center gap-2 transition"
+            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-xl text-sm shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-[0.99] disabled:opacity-50 cursor-pointer"
           >
-            <span>{loading ? 'Sending OTP Email...' : 'Register & Verify Email'}</span>
+            <span>{loading ? 'Sending OTP Code...' : 'Register & Verify Email'}</span>
             {!loading && <ArrowRight size={16} />}
           </button>
 
           {/* Google OAuth Section */}
           <div className="relative my-3">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
+              <div className="w-full border-t border-slate-200/90"></div>
             </div>
             <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
               <span className="bg-white px-3 text-slate-400 font-bold">Or continue with</span>
@@ -161,11 +173,12 @@ const Register = () => {
           <GoogleAuthButton role={formData.role || 'user'} />
         </form>
 
-        <div className="text-center pt-2 text-xs text-gray-500 font-medium">
+        {/* Footer */}
+        <div className="pt-2 border-t border-slate-100 text-center text-xs text-slate-500 font-medium">
           Already have an account?{' '}
           <button
             onClick={() => dispatch(openModal({ modal: 'LOGIN' }))}
-            className="text-[#5B3DF5] font-extrabold hover:underline"
+            className="text-indigo-600 font-extrabold hover:underline cursor-pointer"
           >
             Sign In
           </button>

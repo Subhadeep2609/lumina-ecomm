@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 const sendEmail = async (options) => {
   const brevoApiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.FROM_EMAIL || process.env.SMTP_USER || 'rajsaha.sep@gmail.com';
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.FROM_EMAIL || process.env.SMTP_USER || 'security@luminamarket.com';
   const senderName = process.env.FROM_NAME || 'LuminaMarket Security';
 
   const defaultHtml = `

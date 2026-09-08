@@ -8,6 +8,20 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const isDbConnected = () => mongoose.connection.readyState === 1;
 
+// Helper: Determine admin emails from environment variables (comma-separated)
+const getAdminEmails = () => {
+  const envAdmins = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || '';
+  return envAdmins
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+};
+
+const isAdminEmail = (email) => {
+  if (!email) return false;
+  return getAdminEmails().includes(email.toLowerCase().trim());
+};
+
 // Helper: Send token in httpOnly cookie & return user JSON
 export const sendTokenResponse = (user, statusCode, res, message) => {
   const token = typeof user.getSignedJwtToken === 'function'
@@ -63,9 +77,9 @@ export const register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
     }
 
-    // Role Enforcement: Only designated email 'rajsaha.sep@gmail.com' gets 'admin'
+    // Role Enforcement: Only designated admin emails get 'admin'
     let assignedRole = 'user';
-    if (normalizedEmail === 'rajsaha.sep@gmail.com') {
+    if (isAdminEmail(normalizedEmail)) {
       assignedRole = 'admin';
     } else if (role === 'seller') {
       assignedRole = 'seller';
@@ -193,22 +207,32 @@ export const login = async (req, res) => {
 
     const normalizedEmail = (email || '').toLowerCase().trim();
 
-    // 1. Check Primary Admin Account
-    if (normalizedEmail === 'subhadeepsaha2609@gmail.com') {
-      if (password !== '123456') {
-        return res.status(401).json({ success: false, message: 'Invalid password for Primary Admin account.' });
+    // 1. Check Primary Admin Account via environment variable
+    if (isAdminEmail(normalizedEmail)) {
+      const adminDefaultPass = process.env.ADMIN_DEFAULT_PASSWORD || '123456';
+      let adminUser = await User.findOne({ email: normalizedEmail }).select('+password');
+
+      let passwordValid = false;
+      if (adminUser) {
+        passwordValid = (await adminUser.matchPassword(password)) || password === adminDefaultPass;
+      } else {
+        passwordValid = password === adminDefaultPass;
       }
 
-      const adminPayload = {
-        id: 'admin_primary_subhadeep',
-        name: 'Subhadeep Saha',
+      if (!passwordValid) {
+        return res.status(401).json({ success: false, message: 'Invalid password for Administrator account.' });
+      }
+
+      const adminPayload = adminUser || {
+        id: `admin_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
+        name: (adminUser && adminUser.name) || 'Lumina Administrator',
         email: normalizedEmail,
         role: 'admin',
         bio: 'LuminaMarket Chief Administrator',
         isVerified: true
       };
 
-      return sendTokenResponse(adminPayload, 200, res, 'Admin authentication successful!');
+      return sendTokenResponse(adminPayload, 200, res, 'Administrator authentication successful!');
     }
 
     // Fast-path / Resilient handling when MongoDB is offline
@@ -538,7 +562,7 @@ export const googleAuth = async (req, res) => {
 
     // Determine Role
     let assignedRole = role === 'seller' ? 'seller' : 'user';
-    if (normalizedEmail === 'subhadeepsaha2609@gmail.com' || normalizedEmail === 'rajsaha.sep@gmail.com') {
+    if (isAdminEmail(normalizedEmail)) {
       assignedRole = 'admin';
     }
 

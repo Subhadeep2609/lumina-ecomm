@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, loadUser } from './authSlice.js';
 import { closeModal, openModal, showToast } from '../ui/uiSlice.js';
@@ -18,6 +18,7 @@ const Login = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   // Forgot Password States
   const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -30,12 +31,13 @@ const Login = () => {
 
   const handleClose = () => {
     setFormData({ email: '', password: '', role: 'user' });
+    setIsAdminMode(false);
     setIsForgotPassword(false);
     setResetStep(1);
     dispatch(closeModal());
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && activeModal === 'LOGIN') {
         handleClose();
@@ -109,25 +111,40 @@ const Login = () => {
   return (
     <div className="modal-overlay" onClick={handleClose}>
       <div
-        className="modal-card max-w-md w-full bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 font-body"
+        className="modal-card max-w-[440px] w-full mx-auto bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 font-body"
+        style={{ maxWidth: '440px' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-              {isForgotPassword ? <KeyRound size={20} /> : <Sparkles size={20} />}
+            <div
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md ${
+                isAdminMode
+                  ? 'bg-gradient-to-tr from-amber-600 to-rose-600 shadow-amber-500/20'
+                  : isForgotPassword
+                  ? 'bg-gradient-to-tr from-emerald-600 to-teal-600 shadow-emerald-500/20'
+                  : 'bg-gradient-to-tr from-indigo-600 to-purple-600 shadow-indigo-500/20'
+              }`}
+            >
+              {isAdminMode ? <Shield size={20} /> : isForgotPassword ? <KeyRound size={20} /> : <Sparkles size={20} />}
             </div>
             <div>
-              <h2 className="text-xl font-black font-heading text-slate-900">
-                {isForgotPassword ? 'Reset Your Password' : 'Sign In to LuminaMarket'}
+              <h2 className="text-xl font-black font-heading text-slate-900 leading-tight">
+                {isAdminMode
+                  ? 'Admin Portal'
+                  : isForgotPassword
+                  ? 'Reset Password'
+                  : 'Welcome Back'}
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                {isForgotPassword
+                {isAdminMode
+                  ? 'Administrative access & controls'
+                  : isForgotPassword
                   ? resetStep === 1
-                    ? 'Enter email to receive password reset OTP'
-                    : 'Enter 6-digit OTP code and new password'
-                  : 'Access your account, orders and wishlist'}
+                    ? 'Enter email for password reset OTP'
+                    : 'Enter 6-digit OTP code & new password'
+                  : 'Sign in to access your account'}
               </p>
             </div>
           </div>
@@ -135,6 +152,7 @@ const Login = () => {
           <button
             onClick={handleClose}
             className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition"
+            aria-label="Close modal"
           >
             <X size={20} />
           </button>
@@ -153,7 +171,7 @@ const Login = () => {
                       type="email"
                       required
                       className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition font-medium"
-                      placeholder="Enter your registered email..."
+                      placeholder="you@example.com"
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                     />
@@ -163,19 +181,14 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={resetLoading}
-                  className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-2xl text-sm shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
+                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-xl text-sm shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-[0.99] disabled:opacity-50 cursor-pointer"
                 >
-                  {resetLoading ? <Loader2 size={16} className="animate-spin" /> : <KeyRound size={16} />}
-                  <span>{resetLoading ? 'Sending Reset OTP...' : 'Send Password Reset Code'}</span>
+                  {resetLoading ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
+                  <span>{resetLoading ? 'Sending OTP Code...' : 'Send Verification OTP'}</span>
                 </button>
               </form>
             ) : (
               <form onSubmit={handleResetPassword} className="space-y-4">
-                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl text-xs font-bold flex items-center gap-2">
-                  <CheckCircle2 size={16} className="shrink-0 text-emerald-600" />
-                  <span>OTP code sent to <strong>{resetEmail}</strong></span>
-                </div>
-
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 block">6-Digit Verification OTP</label>
                   <input
@@ -216,10 +229,10 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={resetLoading}
-                  className="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
+                  className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-[0.99] disabled:opacity-50 cursor-pointer"
                 >
                   {resetLoading ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-                  <span>{resetLoading ? 'Updating Password...' : 'Save New Password & Sign In'}</span>
+                  <span>{resetLoading ? 'Updating Password...' : 'Save Password & Sign In'}</span>
                 </button>
               </form>
             )}
@@ -231,7 +244,7 @@ const Login = () => {
                   setIsForgotPassword(false);
                   setResetStep(1);
                 }}
-                className="text-xs font-bold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1"
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1 cursor-pointer"
               >
                 <ArrowLeft size={14} /> Back to Sign In
               </button>
@@ -240,34 +253,53 @@ const Login = () => {
         ) : (
           /* REGULAR LOGIN FLOW */
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Role-Based Sign-In Options (Buyer, Seller, Admin) */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 block font-heading">Sign In Role Option</label>
-              <div className="grid grid-cols-3 gap-2 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80">
-                {[
-                  { id: 'user', label: 'Buyer', icon: UserCheck, activeColor: 'text-indigo-600' },
-                  { id: 'seller', label: 'Seller', icon: Store, activeColor: 'text-purple-600' },
-                  { id: 'admin', label: 'Admin', icon: Shield, activeColor: 'text-rose-600' }
-                ].map((r) => {
-                  const IconComp = r.icon;
-                  const isSelected = (formData.role || 'user') === r.id;
-                  return (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, role: r.id })}
-                      className={`py-2 px-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition ${
-                        isSelected
-                          ? `bg-white ${r.activeColor} shadow-sm border border-slate-200/80`
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      <IconComp size={14} /> <span>{r.label}</span>
-                    </button>
-                  );
-                })}
+            {/* Role Options: Discreet Admin vs Buyer/Seller */}
+            {isAdminMode ? (
+              <div className="flex items-center justify-between p-2.5 bg-amber-50/80 border border-amber-200 rounded-2xl">
+                <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
+                  <Shield size={16} className="text-amber-600" />
+                  <span>Admin Access Mode</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAdminMode(false);
+                    setFormData({ ...formData, role: 'user' });
+                  }}
+                  className="text-[11px] font-bold text-amber-700 hover:text-amber-900 hover:underline cursor-pointer"
+                >
+                  Switch to Buyer
+                </button>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 block font-heading">Sign In Role Option</label>
+                <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, role: 'user' })}
+                    className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                      formData.role === 'user'
+                        ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/80'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <UserCheck size={14} /> <span>Buyer</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, role: 'seller' })}
+                    className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                      formData.role === 'seller'
+                        ? 'bg-white text-purple-600 shadow-xs border border-slate-200/80'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Store size={14} /> <span>Seller</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 block">Email Address</label>
@@ -293,7 +325,7 @@ const Login = () => {
                     setIsForgotPassword(true);
                     setResetEmail(formData.email || '');
                   }}
-                  className="text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:underline"
+                  className="text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer"
                 >
                   Forgot Password?
                 </button>
@@ -322,35 +354,61 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-2xl text-sm shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
+              className={`w-full py-3 text-white font-extrabold rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-[0.99] disabled:opacity-50 cursor-pointer ${
+                isAdminMode
+                  ? 'bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 shadow-amber-600/20'
+                  : 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 shadow-indigo-600/20'
+              }`}
             >
-              <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
+              <span>{loading ? 'Authenticating...' : isAdminMode ? 'Sign In as Admin' : 'Sign In'}</span>
               {!loading && <ArrowRight size={16} />}
             </button>
 
             {/* Google OAuth Section */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200/90"></div>
-              </div>
-              <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
-                <span className="bg-white px-3 text-slate-400 font-bold">Or continue with</span>
-              </div>
-            </div>
+            {!isAdminMode && (
+              <>
+                <div className="relative my-3">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200/90"></div>
+                  </div>
+                  <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
+                    <span className="bg-white px-3 text-slate-400 font-bold">Or continue with</span>
+                  </div>
+                </div>
 
-            <GoogleAuthButton role={formData.role || 'user'} />
+                <GoogleAuthButton role={formData.role || 'user'} />
+              </>
+            )}
           </form>
         )}
 
-        {/* Footer Toggle */}
-        <div className="text-center pt-2 text-xs text-slate-500 font-medium">
-          Don't have an account?{' '}
-          <button
-            onClick={() => dispatch(openModal({ modal: 'REGISTER' }))}
-            className="text-indigo-600 font-extrabold hover:underline"
-          >
-            Create an Account
-          </button>
+        {/* Footer */}
+        <div className="space-y-2 pt-2 border-t border-slate-100 text-center">
+          <div className="text-xs text-slate-500 font-medium">
+            Don't have an account?{' '}
+            <button
+              onClick={() => dispatch(openModal({ modal: 'REGISTER' }))}
+              className="text-indigo-600 font-extrabold hover:underline cursor-pointer"
+            >
+              Create an Account
+            </button>
+          </div>
+
+          {/* Discreet Admin Portal Link */}
+          <div className="flex justify-center pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                const nextAdmin = !isAdminMode;
+                setIsAdminMode(nextAdmin);
+                setFormData((prev) => ({ ...prev, role: nextAdmin ? 'admin' : 'user' }));
+              }}
+              className="text-[11px] text-slate-400 hover:text-slate-600 transition flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-slate-50 cursor-pointer"
+            >
+              <Shield size={12} className={isAdminMode ? 'text-amber-600' : 'text-slate-400'} />
+              <span>{isAdminMode ? 'Back to Buyer Sign In' : 'Admin Portal'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
