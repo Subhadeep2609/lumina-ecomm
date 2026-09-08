@@ -4,7 +4,15 @@ import { Navigate } from 'react-router-dom';
 import { ShieldAlert } from 'lucide-react';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { user, isAuthenticated, loading, authChecked } = useSelector((state) => state.auth);
+
+  if (loading && !authChecked) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/" replace />;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { logout } from '../features/auth/authSlice.js';
+import { logout, logoutUser } from '../features/auth/authSlice.js';
 import { openModal } from '../features/ui/uiSlice.js';
 import { setFilter, fetchProducts } from '../features/products/productSlice.js';
 import { clearCart } from '../features/orders/orderSlice.js';
@@ -72,7 +72,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
     dispatch(clearCart());
     setAccountMenuOpen(false);
     navigate('/');

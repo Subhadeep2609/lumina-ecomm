@@ -26,7 +26,8 @@ A production-grade, full-stack E-Commerce application built with the **MERN** st
 - **Multi-Provider Fallback**: Seamlessly switches between **Gemini 2.5 Flash**, **OpenAI GPT-4o-mini**, and an in-house catalog recommendation engine if API keys are not provided.
 
 ### 🛡️ Role-Based Access Control (RBAC) & Security
-- **JWT Authentication**: Secure login, registration, and session management.
+- **JWT Authentication via Secure `httpOnly` Cookies**: Session tokens are stored in browser-managed `httpOnly` cookies with `SameSite` and `Secure` protection, preventing token theft through Cross-Site Scripting (XSS). Includes backward-compatible fallback to `Bearer` tokens in `Authorization` headers.
+- **Server-Side Session Clearing**: Dedicated `/api/v1/auth/logout` endpoint that expires and clears authentication cookies.
 - **Email OTP Verification**: Real-time email verification and password reset flows using Nodemailer SMTP.
 - **Three Dedicated Roles**:
   - **Buyer (`user`)**: Browse, cart, wishlist, checkout, and order history.
@@ -105,6 +106,7 @@ Open `server/.env` and configure your settings:
 ```env
 PORT=5000
 NODE_ENV=development
+CLIENT_URL=http://localhost:3000
 MONGO_URI=your_mongo_uri
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRE=30d
@@ -157,30 +159,32 @@ npm run dev
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :--- |
 | **Auth** | | | |
-| `POST` | `/api/auth/register` | Register new user | Public |
-| `POST` | `/api/auth/login` | Login user & return JWT | Public |
-| `POST` | `/api/auth/verify-email` | Verify registration OTP | Public |
-| `POST` | `/api/auth/forgot-password` | Request password reset OTP | Public |
-| `PUT` | `/api/auth/reset-password` | Reset password using OTP | Public |
-| `GET` | `/api/auth/me` | Fetch authenticated user profile | Private |
+| `POST` | `/api/v1/auth/register` | Register new user & send OTP | Public |
+| `POST` | `/api/v1/auth/login` | Authenticate user & set `httpOnly` cookie | Public |
+| `POST` | `/api/v1/auth/verify-email` | Verify registration OTP & set cookie | Public |
+| `POST` | `/api/v1/auth/logout` | Logout user & clear `httpOnly` cookie | Public |
+| `POST` | `/api/v1/auth/forgot-password` | Request password reset OTP | Public |
+| `POST` | `/api/v1/auth/reset-password` | Reset password with OTP & set cookie | Public |
+| `GET` | `/api/v1/auth/me` | Fetch current authenticated user profile | Private (Cookie/Bearer) |
+| `PUT` | `/api/v1/auth/update-profile` | Update profile information | Private |
 | **Products** | | | |
-| `GET` | `/api/products` | Get products (search, filter, sort, paginate) | Public |
-| `GET` | `/api/products/:id` | Get single product details | Public |
-| `POST` | `/api/products` | Create product listing | Seller / Admin |
-| `PUT` | `/api/products/:id` | Update product listing | Seller (Owner) / Admin |
-| `DELETE` | `/api/products/:id` | Delete product listing | Seller (Owner) / Admin |
+| `GET` | `/api/v1/products` | Get products (search, filter, sort, paginate) | Public |
+| `GET` | `/api/v1/products/:id` | Get single product details | Public |
+| `POST` | `/api/v1/products` | Create product listing | Seller / Admin |
+| `PUT` | `/api/v1/products/:id` | Update product listing | Seller (Owner) / Admin |
+| `DELETE` | `/api/v1/products/:id` | Delete product listing | Seller (Owner) / Admin |
 | **Orders** | | | |
-| `POST` | `/api/orders/razorpay` | Create Razorpay order | Buyer (`user`) |
-| `POST` | `/api/orders/verify` | Verify payment and persist order | Buyer (`user`) |
-| `GET` | `/api/orders/my-orders` | Fetch user's order history | Buyer (`user`) |
-| `GET` | `/api/orders` | Fetch all platform orders | Admin |
-| `PUT` | `/api/orders/:id/status` | Update fulfillment status | Admin |
+| `POST` | `/api/v1/orders/razorpay` | Create Razorpay order | Buyer (`user`) |
+| `POST` | `/api/v1/orders/verify` | Verify payment and persist order | Buyer (`user`) |
+| `GET` | `/api/v1/orders/my-orders` | Fetch user's order history | Buyer (`user`) |
+| `GET` | `/api/v1/orders` | Fetch all platform orders | Admin |
+| `PUT` | `/api/v1/orders/:id/status` | Update fulfillment status | Admin |
 | **AI (Lumina)** | | | |
-| `POST` | `/api/ai/chat` | Conversational shopping assistant | Public |
-| `POST` | `/api/ai/summarize-product` | Generate structured product analysis | Public |
-| `POST` | `/api/ai/generate-copy` | Generate marketing title & description | Seller / Admin |
+| `POST` | `/api/v1/ai/chat` | Conversational shopping assistant | Public |
+| `POST` | `/api/v1/ai/summarize-product` | Generate structured product analysis | Public |
+| `POST` | `/api/v1/ai/generate-copy` | Generate marketing title & description | Seller / Admin |
 | **Upload** | | | |
-| `POST` | `/api/upload` | Upload image to Cloudinary CDN | Authenticated |
+| `POST` | `/api/v1/upload` | Upload image to Cloudinary CDN | Authenticated |
 
 ---
 
@@ -188,7 +192,7 @@ npm run dev
 
 - **Frontend**: React 18, Vite 5, Tailwind CSS v4, Redux Toolkit, React Router DOM v6, Lucide React icons.
 - **Backend**: Node.js, Express.js (ES Modules), MongoDB & Mongoose.
-- **Authentication**: JSON Web Tokens (JWT), bcryptjs password hashing.
+- **Authentication**: Secure `httpOnly` Cookies, JSON Web Tokens (JWT), `cookie-parser`, bcryptjs password hashing.
 - **File Storage**: Cloudinary SDK, Multer.
 - **Mail Service**: Nodemailer (SMTP).
 - **Payment Gateway**: Razorpay Node SDK.

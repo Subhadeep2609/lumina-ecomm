@@ -90,8 +90,7 @@ const Login = () => {
         })
       });
 
-      if (res.token) {
-        localStorage.setItem('token', res.token);
+      if (res.success || res.token) {
         dispatch(loadUser());
       }
 

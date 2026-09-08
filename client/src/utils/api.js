@@ -1,8 +1,6 @@
 const API_BASE = '/api/v1';
 
 export const apiCall = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('lumina_token');
-
   const headers = {
     ...options.headers
   };
@@ -12,11 +10,8 @@ export const apiCall = async (endpoint, options = {}) => {
     headers['Content-Type'] = 'application/json';
   }
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   const response = await fetch(`${API_BASE}${endpoint}`, {
+    credentials: 'include',
     ...options,
     headers
   });

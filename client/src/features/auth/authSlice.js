@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiCall } from '../../utils/api';
 import { showToast, openModal, closeModal } from '../ui/uiSlice';
 
-const savedToken = localStorage.getItem('lumina_token');
+// Clear legacy localStorage token from previous auth implementation
+localStorage.removeItem('lumina_token');
 const savedUser = localStorage.getItem('lumina_user') ? JSON.parse(localStorage.getItem('lumina_user')) : null;
 
 // Async Thunks
@@ -32,7 +33,6 @@ export const verifyEmailUser = createAsyncThunk(
         method: 'POST',
         body: JSON.stringify({ email, otp })
       });
-      localStorage.setItem('lumina_token', data.token);
       localStorage.setItem('lumina_user', JSON.stringify(data.user));
       dispatch(showToast({ message: data.message, type: 'success' }));
       dispatch(closeModal());
@@ -69,7 +69,6 @@ export const loginUser = createAsyncThunk(
         method: 'POST',
         body: JSON.stringify(credentials)
       });
-      localStorage.setItem('lumina_token', data.token);
       localStorage.setItem('lumina_user', JSON.stringify(data.user));
       dispatch(showToast({ message: data.message, type: 'success' }));
       dispatch(closeModal());
@@ -91,11 +90,24 @@ export const loadUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await apiCall('/auth/me');
+      localStorage.setItem('lumina_user', JSON.stringify(data.user));
       return data.user;
     } catch (err) {
-      localStorage.removeItem('lumina_token');
       localStorage.removeItem('lumina_user');
       return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { dispatch }) => {
+    try {
+      await apiCall('/auth/logout', { method: 'POST' });
+    } catch (err) {
+      console.warn('Backend logout response error:', err);
+    } finally {
+      dispatch(logout());
     }
   }
 );
@@ -122,20 +134,22 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: savedUser,
-    token: savedToken,
-    isAuthenticated: Boolean(savedToken),
+    token: null,
+    isAuthenticated: Boolean(savedUser),
+    authChecked: false,
     pendingEmailVerification: null,
     loading: false,
     error: null,
     testOtp: null
   },
   reducers: {
-    logout: (state, action) => {
+    logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('lumina_token');
+      state.authChecked = true;
       localStorage.removeItem('lumina_user');
+      localStorage.removeItem('lumina_token');
     },
     setPendingVerificationEmail: (state, action) => {
       state.pendingEmailVerification = action.payload;
@@ -164,8 +178,9 @@ const authSlice = createSlice({
       .addCase(verifyEmailUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
+        state.authChecked = true;
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = null;
         state.pendingEmailVerification = null;
         state.testOtp = null;
       })
@@ -180,22 +195,30 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
+        state.authChecked = true;
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       // Load User
+      .addCase(loadUser.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(loadUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.authChecked = true;
       })
       .addCase(loadUser.rejected, (state) => {
+        state.loading = false;
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
+        state.authChecked = true;
       })
       // Update Profile
       .addCase(updateUserProfile.pending, (state) => {

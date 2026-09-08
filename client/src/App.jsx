@@ -29,13 +29,10 @@ import LuminaAIAssistant from './features/ai/LuminaAIAssistant.jsx';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (token) {
-      dispatch(loadUser());
-    }
-  }, [dispatch, token]);
+    dispatch(loadUser());
+  }, [dispatch]);
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

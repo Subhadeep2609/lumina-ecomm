@@ -4,7 +4,12 @@ import User from '../models/User.js';
 export const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  // 1. Prioritize httpOnly cookie
+  if (req.cookies && (req.cookies.token || req.cookies.lumina_token)) {
+    token = req.cookies.token || req.cookies.lumina_token;
+  }
+  // 2. Fallback to Authorization header Bearer token
+  else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
 

@@ -5,6 +5,43 @@ import jwt from 'jsonwebtoken';
 
 const isDbConnected = () => mongoose.connection.readyState === 1;
 
+// Helper: Send token in httpOnly cookie & return user JSON
+export const sendTokenResponse = (user, statusCode, res, message) => {
+  const token = typeof user.getSignedJwtToken === 'function'
+    ? user.getSignedJwtToken()
+    : jwt.sign(
+        { id: user.id || user._id, role: user.role },
+        process.env.JWT_SECRET || 'lumina_super_secret_jwt_key_2026_x99',
+        { expiresIn: process.env.JWT_EXPIRE || '30d' }
+      );
+
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    path: '/'
+  };
+
+  res.cookie('token', token, cookieOptions);
+
+  return res.status(statusCode).json({
+    success: true,
+    message,
+    token,
+    user: {
+      id: user._id || user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+      bio: user.bio,
+      isVerified: user.isVerified
+    }
+  });
+};
+
 // @desc    Register new user & send Nodemailer OTP
 // @route   POST /api/v1/auth/register
 // @access  Public
@@ -78,20 +115,12 @@ export const verifyEmail = async (req, res) => {
     }
 
     if (user.isVerified) {
-      const token = user.getSignedJwtToken();
-      return res.status(200).json({
-        success: true,
-        message: 'Email already verified. Logged in successfully.',
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          avatar: user.avatar,
-          isVerified: true
-        }
-      });
+      return sendTokenResponse(
+        user,
+        200,
+        res,
+        'Email already verified. Logged in successfully.'
+      );
     }
 
     if (user.verificationOtp !== otp && otp !== '123456') {
@@ -103,21 +132,12 @@ export const verifyEmail = async (req, res) => {
     user.otpExpiresAt = undefined;
     await user.save();
 
-    const token = user.getSignedJwtToken();
-
-    return res.status(200).json({
-      success: true,
-      message: 'Email verified successfully! You are now logged in.',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar,
-        isVerified: true
-      }
-    });
+    return sendTokenResponse(
+      user,
+      200,
+      res,
+      'Email verified successfully! You are now logged in.'
+    );
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -185,18 +205,7 @@ export const login = async (req, res) => {
         isVerified: true
       };
 
-      const token = jwt.sign(
-        { id: adminPayload.id, role: 'admin' },
-        process.env.JWT_SECRET || 'lumina_super_secret_jwt_key_2026_x99',
-        { expiresIn: '30d' }
-      );
-
-      return res.status(200).json({
-        success: true,
-        message: 'Admin authentication successful!',
-        token,
-        user: adminPayload
-      });
+      return sendTokenResponse(adminPayload, 200, res, 'Admin authentication successful!');
     }
 
     // Fast-path / Resilient handling when MongoDB is offline
@@ -217,18 +226,12 @@ export const login = async (req, res) => {
         isVerified: true
       };
 
-      const token = jwt.sign(
-        { id: userPayload.id, role: selectedRole },
-        process.env.JWT_SECRET || 'lumina_super_secret_jwt_key_2026_x99',
-        { expiresIn: '30d' }
+      return sendTokenResponse(
+        userPayload,
+        200,
+        res,
+        `${selectedRole === 'seller' ? 'Seller' : 'Buyer'} authentication successful!`
       );
-
-      return res.status(200).json({
-        success: true,
-        message: `${selectedRole === 'seller' ? 'Seller' : 'Buyer'} authentication successful!`,
-        token,
-        user: userPayload
-      });
     }
 
     // Standard Database Login with Strict RBAC Check
@@ -268,24 +271,9 @@ export const login = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
 
-    const token = user.getSignedJwtToken();
-
     const roleTitle = user.role === 'admin' ? 'Admin' : user.role === 'seller' ? 'Seller' : 'Buyer';
 
-    return res.status(200).json({
-      success: true,
-      message: `${roleTitle} authentication successful!`,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar,
-        bio: user.bio,
-        isVerified: true
-      }
-    });
+    return sendTokenResponse(user, 200, res, `${roleTitle} authentication successful!`);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -471,15 +459,33 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    const token = user.getSignedJwtToken();
-
-    return res.status(200).json({
-      success: true,
-      message: 'Password reset successfully! You are now signed in.',
-      token,
-      user
-    });
+    return sendTokenResponse(
+      user,
+      200,
+      res,
+      'Password reset successfully! You are now signed in.'
+    );
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
+};
+
+// @desc    Logout user & clear httpOnly cookie
+// @route   POST /api/v1/auth/logout
+// @access  Public
+export const logout = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    path: '/'
+  };
+
+  res.clearCookie('token', cookieOptions);
+
+  return res.status(200).json({
+    success: true,
+    message: 'Logged out successfully'
+  });
 };
