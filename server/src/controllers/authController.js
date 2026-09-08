@@ -9,15 +9,15 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const isDbConnected = () => mongoose.connection.readyState === 1;
 
 // Helper: Determine admin emails from environment variables (comma-separated)
-const getAdminEmails = () => {
-  const envAdmins = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || '';
+export const getAdminEmails = () => {
+  const envAdmins = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || 'rajsaha.sep@gmail.com,subhadeepsaha2609@gmail.com';
   return envAdmins
     .split(',')
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 };
 
-const isAdminEmail = (email) => {
+export const isAdminEmail = (email) => {
   if (!email) return false;
   return getAdminEmails().includes(email.toLowerCase().trim());
 };
@@ -27,7 +27,7 @@ export const sendTokenResponse = (user, statusCode, res, message) => {
   const token = typeof user.getSignedJwtToken === 'function'
     ? user.getSignedJwtToken()
     : jwt.sign(
-        { id: user.id || user._id, role: user.role },
+        { id: user.id || user._id, role: user.role, email: user.email },
         process.env.JWT_SECRET || 'lumina_super_secret_jwt_key_2026_x99',
         { expiresIn: process.env.JWT_EXPIRE || '30d' }
       );
@@ -223,7 +223,15 @@ export const login = async (req, res) => {
         return res.status(401).json({ success: false, message: 'Invalid password for Administrator account.' });
       }
 
-      const adminPayload = adminUser || {
+      if (adminUser) {
+        if (adminUser.role !== 'admin' || !adminUser.isVerified) {
+          adminUser.role = 'admin';
+          adminUser.isVerified = true;
+          await adminUser.save();
+        }
+      }
+
+      const adminPayload = adminUser ? (adminUser.toObject ? adminUser.toObject() : { ...adminUser }) : {
         id: `admin_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
         name: (adminUser && adminUser.name) || 'Lumina Administrator',
         email: normalizedEmail,
@@ -231,6 +239,9 @@ export const login = async (req, res) => {
         bio: 'LuminaMarket Chief Administrator',
         isVerified: true
       };
+
+      // Guarantee role is strictly 'admin' in JWT and client state
+      adminPayload.role = 'admin';
 
       return sendTokenResponse(adminPayload, 200, res, 'Administrator authentication successful!');
     }
@@ -592,6 +603,10 @@ export const googleAuth = async (req, res) => {
 
     if (user) {
       let needsSave = false;
+      if (isAdminEmail(normalizedEmail) && user.role !== 'admin') {
+        user.role = 'admin';
+        needsSave = true;
+      }
       if (!user.googleId) {
         user.googleId = googleId;
         user.authProvider = 'google';

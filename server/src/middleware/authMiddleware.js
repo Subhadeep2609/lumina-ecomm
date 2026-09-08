@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { isAdminEmail } from '../controllers/authController.js';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -31,13 +32,18 @@ export const protect = async (req, res, next) => {
     }
 
     if (user) {
+      if (isAdminEmail(user.email) && user.role !== 'admin') {
+        user.role = 'admin';
+        user.save().catch(() => {});
+      }
       req.user = user;
     } else {
+      const isEmailAdmin = isAdminEmail(decoded.email);
       req.user = {
         _id: decoded.id,
-        role: decoded.role || 'user',
+        role: isEmailAdmin ? 'admin' : (decoded.role || 'user'),
         name: 'Logged In User',
-        email: 'user@lumina.com',
+        email: decoded.email || 'user@lumina.com',
         isVerified: true
       };
     }

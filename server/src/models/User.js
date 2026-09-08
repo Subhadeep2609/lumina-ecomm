@@ -111,7 +111,7 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 // Generate JWT Token
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign(
-    { id: this._id, role: this.role },
+    { id: this._id, role: this.role, email: this.email },
     process.env.JWT_SECRET || 'lumina_super_secret_jwt_key_2026_x99',
     { expiresIn: process.env.JWT_EXPIRE || '30d' }
   );
