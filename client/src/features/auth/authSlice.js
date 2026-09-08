@@ -85,6 +85,25 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const googleAuthUser = createAsyncThunk(
+  'auth/googleAuth',
+  async ({ credential, role }, { dispatch, rejectWithValue }) => {
+    try {
+      const data = await apiCall('/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ credential, role })
+      });
+      localStorage.setItem('lumina_user', JSON.stringify(data.user));
+      dispatch(showToast({ message: data.message || 'Signed in with Google successfully!', type: 'success' }));
+      dispatch(closeModal());
+      return data;
+    } catch (err) {
+      dispatch(showToast({ message: err.message || 'Google sign-in failed', type: 'error' }));
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { rejectWithValue }) => {
@@ -200,6 +219,22 @@ const authSlice = createSlice({
         state.token = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Google Auth
+      .addCase(googleAuthUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleAuthUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.authChecked = true;
+        state.user = action.payload.user;
+        state.token = null;
+      })
+      .addCase(googleAuthUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

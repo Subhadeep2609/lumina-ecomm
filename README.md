@@ -27,6 +27,7 @@ A production-grade, full-stack E-Commerce application built with the **MERN** st
 
 ### 🛡️ Role-Based Access Control (RBAC) & Security
 - **JWT Authentication via Secure `httpOnly` Cookies**: Session tokens are stored in browser-managed `httpOnly` cookies with `SameSite` and `Secure` protection, preventing token theft through Cross-Site Scripting (XSS). Includes backward-compatible fallback to `Bearer` tokens in `Authorization` headers.
+- **Google OAuth 2.0 Integration**: One-click sign-in and sign-up using Google Identity Services (`@react-oauth/google`), automatically verifying Google users without requiring passwords or OTP verification.
 - **Server-Side Session Clearing**: Dedicated `/api/v1/auth/logout` endpoint that expires and clears authentication cookies.
 - **Email OTP Verification**: Real-time email verification and password reset flows using Nodemailer SMTP.
 - **Three Dedicated Roles**:
@@ -161,6 +162,7 @@ npm run dev
 | **Auth** | | | |
 | `POST` | `/api/v1/auth/register` | Register new user & send OTP | Public |
 | `POST` | `/api/v1/auth/login` | Authenticate user & set `httpOnly` cookie | Public |
+| `POST` | `/api/v1/auth/google` | Sign in / register via Google OAuth | Public |
 | `POST` | `/api/v1/auth/verify-email` | Verify registration OTP & set cookie | Public |
 | `POST` | `/api/v1/auth/logout` | Logout user & clear `httpOnly` cookie | Public |
 | `POST` | `/api/v1/auth/forgot-password` | Request password reset OTP | Public |
@@ -190,9 +192,9 @@ npm run dev
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: React 18, Vite 5, Tailwind CSS v4, Redux Toolkit, React Router DOM v6, Lucide React icons.
+- **Frontend**: React 18, Vite 5, Tailwind CSS v4, Redux Toolkit, React Router DOM v6, Lucide React icons, `@react-oauth/google`.
 - **Backend**: Node.js, Express.js (ES Modules), MongoDB & Mongoose.
-- **Authentication**: Secure `httpOnly` Cookies, JSON Web Tokens (JWT), `cookie-parser`, bcryptjs password hashing.
+- **Authentication**: Google OAuth 2.0 (`google-auth-library`), Secure `httpOnly` Cookies, JSON Web Tokens (JWT), `cookie-parser`, bcryptjs password hashing.
 - **File Storage**: Cloudinary SDK, Multer.
 - **Mail Service**: Nodemailer (SMTP).
 - **Payment Gateway**: Razorpay Node SDK.

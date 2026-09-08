@@ -2,6 +2,9 @@ import User from '../models/User.js';
 import sendEmail from '../utils/sendEmail.js';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const isDbConnected = () => mongoose.connection.readyState === 1;
 
@@ -488,4 +491,117 @@ export const logout = async (req, res) => {
     success: true,
     message: 'Logged out successfully'
   });
+};
+
+// @desc    Google OAuth Login / Register
+// @route   POST /api/v1/auth/google
+// @access  Public
+export const googleAuth = async (req, res) => {
+  try {
+    const { credential, role } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Google credential token is required.' });
+    }
+
+    let payload;
+
+    // 1. Verify via google-auth-library if GOOGLE_CLIENT_ID is configured
+    if (process.env.GOOGLE_CLIENT_ID) {
+      try {
+        const ticket = await googleClient.verifyIdToken({
+          idToken: credential,
+          audience: process.env.GOOGLE_CLIENT_ID
+        });
+        payload = ticket.getPayload();
+      } catch (verifyErr) {
+        console.warn('[Google Auth] Library verify failed, attempting tokeninfo fallback:', verifyErr.message);
+      }
+    }
+
+    // 2. Direct tokeninfo verification fallback (verifies signature with Google's public keys)
+    if (!payload) {
+      const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+      if (!response.ok) {
+        return res.status(401).json({ success: false, message: 'Invalid or expired Google credential token.' });
+      }
+      payload = await response.json();
+    }
+
+    const { sub: googleId, email, name, picture } = payload;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Google account does not have an email address.' });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Determine Role
+    let assignedRole = role === 'seller' ? 'seller' : 'user';
+    if (normalizedEmail === 'subhadeepsaha2609@gmail.com' || normalizedEmail === 'rajsaha.sep@gmail.com') {
+      assignedRole = 'admin';
+    }
+
+    // Disallow non-admins from claiming the 'admin' role via Google OAuth
+    if (role === 'admin' && assignedRole !== 'admin') {
+      assignedRole = 'user';
+    }
+
+    // Resilient offline fallback if DB is not connected
+    if (!isDbConnected()) {
+      const userPayload = {
+        id: `google_${googleId}`,
+        name: name || 'Google User',
+        email: normalizedEmail,
+        role: assignedRole,
+        avatar: { url: picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300' },
+        bio: `LuminaMarket ${assignedRole} Account (Google Verified)`,
+        isVerified: true
+      };
+      return sendTokenResponse(userPayload, 200, res, 'Google authentication successful!');
+    }
+
+    // Find existing user by googleId or email
+    let user = await User.findOne({
+      $or: [{ googleId }, { email: normalizedEmail }]
+    });
+
+    if (user) {
+      let needsSave = false;
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.authProvider = 'google';
+        needsSave = true;
+      }
+      if (!user.isVerified) {
+        user.isVerified = true;
+        needsSave = true;
+      }
+      if (picture && (!user.avatar?.url || user.avatar?.public_id === 'default_avatar')) {
+        user.avatar = { url: picture, public_id: 'google_avatar' };
+        needsSave = true;
+      }
+      if (needsSave) {
+        await user.save();
+      }
+    } else {
+      user = await User.create({
+        name: name || 'Google User',
+        email: normalizedEmail,
+        googleId,
+        authProvider: 'google',
+        role: assignedRole,
+        isVerified: true,
+        avatar: {
+          url: picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+          public_id: 'google_avatar'
+        }
+      });
+    }
+
+    return sendTokenResponse(user, 200, res, 'Google authentication successful!');
+  } catch (error) {
+    console.error('[Google Auth Error]:', error);
+    return res.status(500).json({ success: false, message: error.message || 'Google authentication failed' });
+  }
 };

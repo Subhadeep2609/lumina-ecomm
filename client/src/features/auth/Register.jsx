@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from './authSlice.js';
 import { closeModal, openModal } from '../ui/uiSlice.js';
 import { User, Mail, Lock, X, Sparkles, UserCheck, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import GoogleAuthButton from '../../components/GoogleAuthButton.jsx';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -146,6 +147,18 @@ const Register = () => {
             <span>{loading ? 'Sending OTP Email...' : 'Register & Verify Email'}</span>
             {!loading && <ArrowRight size={16} />}
           </button>
+
+          {/* Google OAuth Section */}
+          <div className="relative my-3">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
+              <span className="bg-white px-3 text-slate-400 font-bold">Or continue with</span>
+            </div>
+          </div>
+
+          <GoogleAuthButton role={formData.role || 'user'} />
         </form>
 
         <div className="text-center pt-2 text-xs text-gray-500 font-medium">

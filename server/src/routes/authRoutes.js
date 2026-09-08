@@ -5,6 +5,7 @@ import {
   resendOtp,
   login,
   logout,
+  googleAuth,
   getMe,
   updateProfile,
   subscribeNewsletter,
@@ -20,6 +21,7 @@ router.post('/verify-email', verifyEmail);
 router.post('/resend-otp', resendOtp);
 router.post('/login', login);
 router.post('/logout', logout);
+router.post('/google', googleAuth);
 router.get('/me', protect, getMe);
 router.put('/update-profile', protect, updateProfile);
 router.post('/newsletter', subscribeNewsletter);
