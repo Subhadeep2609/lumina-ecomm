@@ -42,99 +42,99 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="space-y-8 pb-20 pt-4 px-4 font-body">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
+    <div className="space-y-6 sm:space-y-8 pb-20 pt-3 sm:pt-4 px-2 sm:px-4 font-body">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5 sm:pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Shield size={26} className="text-rose-600" />
-            <h1 className="text-2xl md:text-3xl font-black font-heading text-slate-900 tracking-tight">Admin Control Dashboard</h1>
+            <Shield size={24} className="text-rose-600 sm:w-6.5 sm:h-6.5" />
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black font-heading text-slate-900 tracking-tight">Admin Control Dashboard</h1>
           </div>
           <p className="text-xs md:text-sm text-slate-500 font-medium">
             Role-Based Access Control (RBAC), Global Orders & Product Catalog Management
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
-            className={`text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 ${
+            className={`text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition flex items-center gap-1.5 ${
               activeTab === 'products' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             onClick={() => setActiveTab('products')}
           >
-            <Package size={15} /> Catalog ({products.length})
+            <Package size={14} /> Catalog ({products.length})
           </button>
           <button
-            className={`text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 ${
+            className={`text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition flex items-center gap-1.5 ${
               activeTab === 'orders' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             onClick={() => setActiveTab('orders')}
           >
-            <ShoppingBag size={15} /> Customer Orders
+            <ShoppingBag size={14} /> Orders
           </button>
           <button
-            className={`text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 ${
+            className={`text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition flex items-center gap-1.5 ${
               activeTab === 'users' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             onClick={() => setActiveTab('users')}
           >
-            <Users size={15} /> User Roles
+            <Users size={14} /> Roles
           </button>
           <button
-            className="text-xs font-extrabold px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl shadow-md hover:from-emerald-700 hover:to-teal-700 transition flex items-center gap-1.5 active:scale-95"
+            className="text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl shadow-md hover:from-emerald-700 hover:to-teal-700 transition flex items-center gap-1.5 active:scale-95"
             onClick={() => dispatch(openModal({ modal: 'PRODUCT_FORM' }))}
           >
-            <PlusCircle size={15} /> Add Product
+            <PlusCircle size={14} /> Add Product
           </button>
         </div>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3.5 shadow-2xs">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shrink-0">
-            <Package size={22} />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-3.5 sm:p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3 sm:gap-3.5 shadow-2xs">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shrink-0">
+            <Package size={20} className="sm:w-5.5 sm:h-5.5" />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-extrabold uppercase block">Catalog Total</span>
-            <h3 className="text-2xl font-black text-slate-900 font-heading">{stats.totalProducts || totalProducts}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-extrabold uppercase block">Catalog Total</span>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">{stats.totalProducts || totalProducts}</h3>
           </div>
         </div>
 
-        <div className="p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3.5 shadow-2xs">
-          <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold shrink-0">
-            <AlertCircle size={22} />
+        <div className="p-3.5 sm:p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3 sm:gap-3.5 shadow-2xs">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold shrink-0">
+            <AlertCircle size={20} className="sm:w-5.5 sm:h-5.5" />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-extrabold uppercase block">Out of Stock</span>
-            <h3 className="text-2xl font-black text-rose-600 font-heading">{stats.outOfStock}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-extrabold uppercase block">Out of Stock</span>
+            <h3 className="text-xl sm:text-2xl font-black text-rose-600 font-heading">{stats.outOfStock}</h3>
           </div>
         </div>
 
-        <div className="p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3.5 shadow-2xs">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold shrink-0">
-            <Layers size={22} />
+        <div className="p-3.5 sm:p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3 sm:gap-3.5 shadow-2xs">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold shrink-0">
+            <Layers size={20} className="sm:w-5.5 sm:h-5.5" />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-extrabold uppercase block">Categories</span>
-            <h3 className="text-2xl font-black text-slate-900 font-heading">{stats.categoriesCount || 6}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-extrabold uppercase block">Categories</span>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">{stats.categoriesCount || 6}</h3>
           </div>
         </div>
 
-        <div className="p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3.5 shadow-2xs">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0">
-            <DollarSign size={22} />
+        <div className="p-3.5 sm:p-5 bg-white border border-slate-200/90 rounded-2xl flex items-center gap-3 sm:gap-3.5 shadow-2xs">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+            <DollarSign size={20} className="sm:w-5.5 sm:h-5.5" />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-extrabold uppercase block">Avg Price</span>
-            <h3 className="text-2xl font-black text-emerald-600 font-heading">${stats.avgPrice}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-extrabold uppercase block">Avg Price</span>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-600 font-heading">${stats.avgPrice}</h3>
           </div>
         </div>
       </div>
 
       {activeTab === 'products' ? (
-        <div className="p-6 bg-white border border-slate-200/90 rounded-3xl space-y-4 shadow-2xs overflow-x-auto">
+        <div className="p-4 sm:p-6 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl space-y-4 shadow-2xs overflow-x-auto">
           <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-            <h3 className="text-base font-extrabold font-heading text-slate-900">Inventory Catalog Management</h3>
+            <h3 className="text-sm sm:text-base font-extrabold font-heading text-slate-900">Inventory Catalog Management</h3>
             <button className="text-xs font-bold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5 p-1.5 rounded-lg hover:bg-slate-100 transition" onClick={() => dispatch(fetchProducts())}>
               <RefreshCw size={14} /> Refresh Catalog
             </button>
@@ -143,7 +143,7 @@ const AdminDashboard = () => {
           {products.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs font-medium">No products in database catalog. Click "Add Product" to create one.</div>
           ) : (
-            <table className="w-full text-left text-xs text-slate-700 border-collapse">
+            <table className="w-full min-w-[640px] text-left text-xs text-slate-700 border-collapse">
               <thead>
                 <tr className="border-b border-slate-200/80 text-slate-400 uppercase font-black tracking-wider text-[10px]">
                   <th className="p-3">Product Name</th>

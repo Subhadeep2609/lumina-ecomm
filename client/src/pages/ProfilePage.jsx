@@ -207,9 +207,9 @@ const ProfilePage = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-slate-200/90 gap-6 text-xs font-bold text-slate-500 font-heading">
+      <div className="flex border-b border-slate-200/90 gap-4 sm:gap-6 text-xs font-bold text-slate-500 font-heading overflow-x-auto no-scrollbar whitespace-nowrap">
         <button
-          className={`pb-3 transition flex items-center gap-1.5 ${
+          className={`pb-3 transition flex items-center gap-1.5 shrink-0 ${
             activeTab === 'personal' ? 'text-indigo-600 border-b-2 border-indigo-600 font-black' : 'hover:text-slate-900'
           }`}
           onClick={() => setActiveTab('personal')}
@@ -217,7 +217,7 @@ const ProfilePage = () => {
           <User size={15} /> Personal Details
         </button>
         <button
-          className={`pb-3 transition flex items-center gap-1.5 ${
+          className={`pb-3 transition flex items-center gap-1.5 shrink-0 ${
             activeTab === 'shipping' ? 'text-indigo-600 border-b-2 border-indigo-600 font-black' : 'hover:text-slate-900'
           }`}
           onClick={() => setActiveTab('shipping')}
@@ -225,7 +225,7 @@ const ProfilePage = () => {
           <MapPin size={15} /> Shipping & Delivery
         </button>
         <button
-          className={`pb-3 transition flex items-center gap-1.5 ${
+          className={`pb-3 transition flex items-center gap-1.5 shrink-0 ${
             activeTab === 'shortcuts' ? 'text-indigo-600 border-b-2 border-indigo-600 font-black' : 'hover:text-slate-900'
           }`}
           onClick={() => setActiveTab('shortcuts')}
@@ -237,7 +237,7 @@ const ProfilePage = () => {
       {/* Form Container */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {activeTab === 'personal' && (
-          <div className="p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-6 shadow-2xs">
+          <div className="p-4 sm:p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-5 sm:space-y-6 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-extrabold font-heading text-slate-900">Personal Profile Details</h3>
               <span className="text-xs text-slate-400 font-medium">Update your name, bio, phone and custom avatar</span>
@@ -381,7 +381,7 @@ const ProfilePage = () => {
         )}
 
         {activeTab === 'shipping' && (
-          <div className="p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-6 shadow-2xs">
+          <div className="p-4 sm:p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-5 sm:space-y-6 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-extrabold font-heading text-slate-900">Default Shipping Address</h3>
               <span className="text-xs text-slate-400 font-medium">Used for express checkout and order delivery</span>
@@ -449,7 +449,7 @@ const ProfilePage = () => {
         )}
 
         {activeTab === 'shortcuts' && (
-          <div className="p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-6 shadow-2xs">
+          <div className="p-4 sm:p-6 md:p-8 bg-white border border-slate-200/90 rounded-3xl space-y-5 sm:space-y-6 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-extrabold font-heading text-slate-900">Account Security & Role Navigation</h3>
               <span className="text-xs text-slate-400 font-medium">Quick links based on your account role ({user.role})</span>

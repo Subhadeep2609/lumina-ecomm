@@ -36,10 +36,10 @@ const App = () => {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div className="min-h-screen flex flex-col bg-[#F7F8FC] text-gray-900 font-body pb-14 md:pb-0">
+      <div className="min-h-screen flex flex-col bg-[#F7F8FC] text-gray-900 font-body pb-20 md:pb-0 overflow-x-hidden">
         <Navbar />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductList />} />

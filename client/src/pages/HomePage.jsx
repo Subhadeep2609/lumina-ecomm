@@ -88,34 +88,34 @@ const HomePage = () => {
   };
 
   return (
-    <div className="space-y-16 pb-20 pt-4 font-body">
+    <div className="space-y-12 sm:space-y-16 pb-20 pt-2 sm:pt-4 font-body">
       {/* Dynamic Hero Banner */}
-      <section className="relative overflow-hidden bg-slate-900 rounded-3xl border border-slate-800 text-white p-8 md:p-14 shadow-2xl">
+      <section className="relative overflow-hidden bg-slate-900 rounded-3xl border border-slate-800 text-white p-5 sm:p-8 md:p-14 shadow-2xl">
         {/* Background Decorative Glow Blobs */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl -z-0 pointer-events-none animate-pulse-glow" />
         <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl -z-0 pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center relative z-10">
           {/* Left Column Text */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-xs font-black text-indigo-300 tracking-wider uppercase">
-              <Sparkles size={14} className="text-amber-400 animate-spin" /> EXCLUSIVE TECH & LIFESTYLE DROPS
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-[11px] sm:text-xs font-black text-indigo-300 tracking-wider uppercase">
+              <Sparkles size={13} className="text-amber-400 animate-spin" /> EXCLUSIVE TECH & LIFESTYLE DROPS
             </div>
 
-            <div className="space-y-3">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-heading tracking-tight leading-tight">
+            <div className="space-y-2 sm:space-y-3">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-heading tracking-tight leading-tight">
                 Next-Gen Shopping. <br />
                 <span className="gradient-text">Unmatched Prices.</span>
               </h1>
-              <p className="text-slate-100 text-sm md:text-base max-w-xl leading-relaxed font-medium">
+              <p className="text-slate-100 text-xs sm:text-sm md:text-base max-w-xl leading-relaxed font-medium">
                 Discover flagship smartphones, high-fidelity audio, smart wearables, and urban essentials backed by Lumina 100% Buyer Guarantee.
               </p>
             </div>
 
             {/* Countdown Badge */}
-            <div className="flex items-center gap-3 bg-slate-800/80 border border-slate-700/80 backdrop-blur-md px-4 py-2.5 rounded-2xl w-fit">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 bg-slate-800/80 border border-slate-700/80 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl w-fit max-w-full">
               <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
-                <Zap size={16} className="fill-amber-400" /> Flash Deal Countdown:
+                <Zap size={15} className="fill-amber-400 shrink-0" /> Flash Deal:
               </div>
               <div className="flex items-center gap-1 font-mono font-black text-xs text-white">
                 <span className="bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">{String(timeLeft.hours).padStart(2, '0')}h</span> :
@@ -124,16 +124,16 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 sm:pt-2">
               <Link
                 to="/products"
-                className="px-7 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-extrabold text-sm rounded-2xl transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-2 active:scale-95"
+                className="px-6 sm:px-7 py-3.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-extrabold text-xs sm:text-sm rounded-2xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 active:scale-95"
               >
                 Shop Full Catalog <ArrowRight size={18} />
               </Link>
               <Link
                 to="/products?category=Deals"
-                className="px-7 py-4 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-700 font-extrabold text-sm rounded-2xl transition active:scale-95 flex items-center gap-2"
+                className="px-6 sm:px-7 py-3.5 sm:py-4 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-700 font-extrabold text-xs sm:text-sm rounded-2xl transition active:scale-95 flex items-center justify-center gap-2"
               >
                 <Flame size={18} className="text-rose-500" /> Hot Deals
               </Link>
@@ -227,21 +227,21 @@ const HomePage = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {CATEGORY_CARDS.map((cat) => {
             const IconComp = cat.icon;
             return (
               <Link
                 key={cat.name}
                 to={`/products?category=${cat.query}`}
-                className="p-5 bg-white border border-slate-200/80 rounded-2xl hover:border-indigo-500 hover:shadow-lg transition-all duration-300 text-center space-y-3 group"
+                className="p-4 sm:p-5 bg-white border border-slate-200/80 rounded-2xl hover:border-indigo-500 hover:shadow-lg transition-all duration-300 text-center space-y-2.5 sm:space-y-3 group"
               >
-                <div className={`w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center font-bold text-xl group-hover:scale-110 transition duration-300 shadow-md`}>
-                  <IconComp size={26} />
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center font-bold text-lg sm:text-xl group-hover:scale-110 transition duration-300 shadow-md`}>
+                  <IconComp size={22} className="sm:w-[26px] sm:h-[26px]" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-sm text-slate-900 group-hover:text-indigo-600 transition font-heading">{cat.name}</h4>
-                  <span className="text-[11px] text-slate-400 font-semibold block">{cat.count}</span>
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-indigo-600 transition font-heading">{cat.name}</h4>
+                  <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">{cat.count}</span>
                 </div>
               </Link>
             );
@@ -250,15 +250,15 @@ const HomePage = () => {
       </section>
 
       {/* Flash Sale Spotlight Section */}
-      <section className="bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
-              <Flame size={22} />
+      <section className="bg-white border border-slate-200/90 rounded-3xl p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 pb-4 sm:pb-5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold shrink-0">
+              <Flame size={20} />
             </div>
             <div>
-              <h2 className="text-2xl font-black font-heading text-slate-900">Flash Sale Spotlight</h2>
-              <p className="text-xs text-slate-500 font-medium">Limited stock available at deep discounts</p>
+              <h2 className="text-xl sm:text-2xl font-black font-heading text-slate-900">Flash Sale Spotlight</h2>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Limited stock available at deep discounts</p>
             </div>
           </div>
           <Link to="/products" className="text-xs font-extrabold text-indigo-600 hover:underline flex items-center gap-1">
@@ -267,14 +267,14 @@ const HomePage = () => {
         </div>
 
         {productLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             <ProductSkeleton />
             <ProductSkeleton />
             <ProductSkeleton />
             <ProductSkeleton />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {displayedProducts.slice(0, 4).map((p) => (
               <ProductCard key={p._id || p.id} product={p} />
             ))}
@@ -283,21 +283,21 @@ const HomePage = () => {
       </section>
 
       {/* Trending Products Tabs Grid */}
-      <section className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <section className="space-y-5 sm:space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black font-heading text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black font-heading text-slate-900 tracking-tight">
               Trending Products
             </h2>
-            <p className="text-xs md:text-sm text-slate-500 font-medium">Top rated choices loved by thousands of shoppers</p>
+            <p className="text-[11px] sm:text-xs md:text-sm text-slate-500 font-medium">Top rated choices loved by thousands of shoppers</p>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl text-xs font-bold text-slate-600">
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl text-xs font-bold text-slate-600 overflow-x-auto no-scrollbar max-w-full">
             {['All', 'Electronics', 'Fashion', 'Home', 'Accessories'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-xl transition-all ${
+                className={`px-3 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === tab ? 'bg-white text-indigo-600 shadow-sm font-extrabold' : 'hover:text-slate-900'
                 }`}
               >
@@ -308,14 +308,14 @@ const HomePage = () => {
         </div>
 
         {productLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             <ProductSkeleton />
             <ProductSkeleton />
             <ProductSkeleton />
             <ProductSkeleton />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {filteredTrending.map((p) => (
               <ProductCard key={p._id || p.id} product={p} />
             ))}
@@ -445,12 +445,12 @@ const HomePage = () => {
         <h2 className="text-xl md:text-2xl font-black font-heading text-slate-900 text-center tracking-tight">
           Featured Partner Brands
         </h2>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 text-center">
           {BRANDS.map((brand) => (
             <div
               key={brand}
               onClick={() => handleBrandClick(brand)}
-              className="p-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200/80 hover:border-indigo-500/40 rounded-2xl font-extrabold text-xs text-slate-700 cursor-pointer transition hover:text-indigo-600 hover:scale-105 shadow-2xs"
+              className="p-2.5 sm:p-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200/80 hover:border-indigo-500/40 rounded-2xl font-extrabold text-xs text-slate-700 cursor-pointer transition hover:text-indigo-600 hover:scale-105 shadow-2xs"
             >
               {brand}
             </div>

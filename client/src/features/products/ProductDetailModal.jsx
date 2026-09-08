@@ -140,24 +140,24 @@ const ProductDetailModal = () => {
   return (
     <div className="modal-overlay" onClick={() => dispatch(closeModal())}>
       <div
-        className="modal-card max-w-4xl w-full bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto font-body"
+        className="modal-card max-w-4xl w-full bg-white border border-slate-200/90 rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl space-y-5 sm:space-y-6 max-h-[92vh] overflow-y-auto font-body"
         style={{ maxWidth: '900px' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Bar: Category, SKU, Stock, Close */}
         <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200/60">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200/60">
               {product.category}
             </span>
-            <span className="text-xs text-slate-400 font-mono font-bold">• SKU #{id.slice(-6).toUpperCase()}</span>
+            <span className="text-[11px] sm:text-xs text-slate-400 font-mono font-bold">• SKU #{id.slice(-6).toUpperCase()}</span>
             {product.stock > 0 ? (
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 In Stock ({product.stock} left)
               </span>
             ) : (
-              <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200/60">
+              <span className="text-[10px] sm:text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200/60">
                 Out of Stock
               </span>
             )}
@@ -172,10 +172,10 @@ const ProductDetailModal = () => {
         </div>
 
         {/* 2-Column Showcase */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start">
           {/* Left: Image & Trust Badges */}
           <div className="space-y-3">
-            <div className="w-full aspect-square sm:h-80 md:h-88 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-50 relative group flex items-center justify-center">
+            <div className="w-full aspect-square max-h-72 sm:max-h-none sm:h-80 md:h-88 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-50 relative group flex items-center justify-center">
               <img
                 src={mainImage}
                 alt={product.title}
@@ -341,9 +341,9 @@ const ProductDetailModal = () => {
                   )}
                 </div>
               ) : (
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                   <button
-                    className="flex-1 py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-black rounded-xl shadow-md hover:shadow-lg text-xs flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex-1 py-3 sm:py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-black rounded-xl shadow-md hover:shadow-lg text-xs flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     onClick={handleAddToCart}
                     disabled={stock <= 0 || maxAddable <= 0}
                   >
@@ -358,7 +358,7 @@ const ProductDetailModal = () => {
                   </button>
 
                   <button
-                    className="flex-1 py-3.5 px-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black rounded-xl shadow-md hover:shadow-lg text-xs flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex-1 py-3 sm:py-3.5 px-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black rounded-xl shadow-md hover:shadow-lg text-xs flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     onClick={handleBuyNow}
                     disabled={stock <= 0}
                   >
@@ -375,9 +375,9 @@ const ProductDetailModal = () => {
         <div className="pt-4 border-t border-slate-100 space-y-3.5">
           {/* Segmented Tab Header Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/60 text-xs font-bold text-slate-600">
+            <div className="flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/60 text-xs font-bold text-slate-600 overflow-x-auto no-scrollbar max-w-full">
               <button
-                className={`px-3.5 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
+                className={`px-3 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === 'description'
                     ? 'bg-white text-indigo-600 shadow-sm font-extrabold'
                     : 'hover:text-slate-900'
@@ -387,7 +387,7 @@ const ProductDetailModal = () => {
                 Overview
               </button>
               <button
-                className={`px-3.5 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
+                className={`px-3 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === 'specs'
                     ? 'bg-white text-indigo-600 shadow-sm font-extrabold'
                     : 'hover:text-slate-900'
@@ -397,7 +397,7 @@ const ProductDetailModal = () => {
                 Specifications
               </button>
               <button
-                className={`px-3.5 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3 sm:px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'ai_take'
                     ? 'bg-white text-purple-700 shadow-sm font-black'
                     : 'text-purple-700 hover:text-purple-900'

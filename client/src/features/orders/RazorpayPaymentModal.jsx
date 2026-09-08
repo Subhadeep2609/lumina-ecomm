@@ -35,13 +35,13 @@ const RazorpayPaymentModal = ({ shippingAddress, totalAmount, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn font-body">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn font-body">
       <div
-        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-scaleUp"
+        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-scaleUp max-h-[94vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Razorpay Authentic Header */}
-        <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-6 relative">
+        <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-4 sm:p-6 relative">
           <button
             onClick={() => dispatch(closeModal())}
             className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
@@ -55,19 +55,19 @@ const RazorpayPaymentModal = ({ shippingAddress, totalAmount, onSuccess }) => {
             </div>
             <div>
               <span className="text-[10px] uppercase font-bold tracking-widest text-blue-200 block">Razorpay Secure Checkout</span>
-              <h2 className="text-xl font-black font-heading text-white">LuminaMarket Store</h2>
+              <h2 className="text-lg sm:text-xl font-black font-heading text-white">LuminaMarket Store</h2>
             </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
             <span className="text-xs text-blue-200 font-medium">Total Amount Payable</span>
-            <span className="text-2xl font-black text-white font-heading">${totalAmount.toFixed(2)}</span>
+            <span className="text-xl sm:text-2xl font-black text-white font-heading">${totalAmount.toFixed(2)}</span>
           </div>
         </div>
 
         {/* Payment Methods Tabs */}
-        <div className="p-6 space-y-5">
-          <div className="flex rounded-2xl bg-slate-100 p-1 font-extrabold text-xs">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
+          <div className="flex rounded-2xl bg-slate-100 p-1 font-extrabold text-[11px] sm:text-xs">
             <button
               type="button"
               onClick={() => setPaymentMethod('card')}

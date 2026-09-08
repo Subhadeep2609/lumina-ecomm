@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter, resetFilters, fetchProducts } from './productSlice.js';
-import { Filter, RotateCcw, Check, Star, Truck } from 'lucide-react';
+import { Filter, RotateCcw, Check, Star, Truck, X } from 'lucide-react';
 
 const CATEGORIES = [
   'All',
@@ -14,7 +14,7 @@ const CATEGORIES = [
   'Accessories'
 ];
 
-const FilterSidebar = () => {
+const FilterSidebar = ({ isMobileDrawer = false, onCloseMobile = null }) => {
   const dispatch = useDispatch();
   const { filters } = useSelector((state) => state.products);
 
@@ -49,19 +49,30 @@ const FilterSidebar = () => {
 
   return (
     <aside className="w-full space-y-4">
-      <div className="bg-white border border-gray-200 rounded-2xl p-5 space-y-5 shadow-sm">
+      <div className={`bg-white border border-gray-200 rounded-2xl p-5 space-y-5 shadow-sm ${isMobileDrawer ? 'border-0 rounded-none shadow-none p-4' : ''}`}>
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2 font-extrabold text-sm text-gray-900 font-heading">
             <Filter size={16} className="text-[#5B3DF5]" />
-            <span>Filters</span>
+            <span>Filters & Refinements</span>
           </div>
-          <button
-            onClick={handleReset}
-            className="text-xs text-rose-600 hover:underline font-bold flex items-center gap-1"
-          >
-            <RotateCcw size={12} /> Clear All
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleReset}
+              className="text-xs text-rose-600 hover:underline font-bold flex items-center gap-1"
+            >
+              <RotateCcw size={12} /> Clear All
+            </button>
+            {isMobileDrawer && onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition ml-2"
+                aria-label="Close filters"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Category Selector */}
@@ -156,6 +167,18 @@ const FilterSidebar = () => {
             ))}
           </div>
         </div>
+
+        {/* Mobile Drawer Bottom Action */}
+        {isMobileDrawer && onCloseMobile && (
+          <div className="pt-4 border-t border-slate-100">
+            <button
+              onClick={onCloseMobile}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-xl shadow-md transition active:scale-95"
+            >
+              Show Filtered Products
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );

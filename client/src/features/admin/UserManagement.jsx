@@ -53,10 +53,10 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-white border border-slate-200/90 rounded-3xl space-y-4 shadow-2xs overflow-x-auto font-body">
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-100">
+    <div className="p-4 sm:p-6 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl space-y-4 shadow-2xs overflow-x-auto font-body">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
-          <h3 className="text-base font-extrabold font-heading text-slate-900">Registered Users & Role Control (RBAC)</h3>
+          <h3 className="text-sm sm:text-base font-extrabold font-heading text-slate-900">Registered Users & Role Control (RBAC)</h3>
           <p className="text-xs text-slate-500 font-medium">Manage buyer, seller, and admin user accounts</p>
         </div>
         <span className="text-xs font-extrabold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-3 py-1 rounded-xl">
@@ -67,7 +67,7 @@ const UserManagement = () => {
       {loading ? (
         <div className="py-12 text-center text-slate-400 text-xs font-medium">Loading users list...</div>
       ) : (
-        <table className="w-full text-left text-xs text-slate-700 border-collapse">
+        <table className="w-full min-w-[580px] sm:min-w-[620px] text-left text-xs text-slate-700 border-collapse">
           <thead>
             <tr className="border-b border-slate-200/80 text-slate-400 uppercase font-black tracking-wider text-[10px]">
               <th className="p-3">User Profile</th>

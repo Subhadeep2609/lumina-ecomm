@@ -208,7 +208,7 @@ const ProductFormModal = () => {
   return (
     <div className="modal-overlay" onClick={() => dispatch(closeModal())}>
       <div
-        className="modal-card max-w-2xl w-full bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto font-body"
+        className="modal-card max-w-2xl w-full bg-white border border-slate-200/90 rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl space-y-5 sm:space-y-6 max-h-[92vh] overflow-y-auto font-body"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -343,7 +343,7 @@ const ProductFormModal = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <input
                 type="text"
                 className="flex-1 px-3 py-2 bg-slate-900/90 border border-indigo-700/60 rounded-xl text-xs text-white placeholder-slate-400 outline-none focus:border-indigo-400 font-medium"
@@ -361,7 +361,7 @@ const ProductFormModal = () => {
                 type="button"
                 disabled={generatingAi}
                 onClick={handleAiGenerate}
-                className="px-3.5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition active:scale-95 disabled:opacity-50 shrink-0"
+                className="px-3.5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition active:scale-95 disabled:opacity-50 shrink-0"
               >
                 {generatingAi ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} className="text-amber-300" />}
                 <span>{generatingAi ? 'Generating...' : 'AI Auto-Fill'}</span>

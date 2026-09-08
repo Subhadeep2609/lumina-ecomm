@@ -72,17 +72,18 @@ const ProductCard = ({ product }) => {
     <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden flex flex-col group card-hover-effect border-slate-200 hover:border-indigo-500/40 relative">
       {/* Image Container */}
       <div
-        className="relative w-full h-52 overflow-hidden bg-slate-50 cursor-pointer"
+        className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-50 cursor-pointer"
         onClick={() => dispatch(openModal({ modal: 'PRODUCT_DETAIL', product }))}
       >
         <img
           src={mainImage}
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-108 transition duration-500"
+          loading="lazy"
         />
 
         {/* Discount Badge */}
-        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-xl text-[10px] font-black uppercase bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-md">
+        <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 px-2 sm:px-2.5 py-1 rounded-xl text-[10px] font-black uppercase bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-md">
           -{discountPercent}% OFF
         </span>
 
@@ -90,15 +91,16 @@ const ProductCard = ({ product }) => {
         {(!isAuthenticated || (user?.role !== 'seller' && user?.role !== 'admin')) && (
           <button
             onClick={handleToggleWishlist}
-            className="absolute top-3 right-3 w-8.5 h-8.5 rounded-full bg-white/90 backdrop-blur-md text-slate-700 hover:text-rose-500 flex items-center justify-center shadow-md hover:scale-110 transition duration-200"
+            className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-9 h-9 rounded-full bg-white/95 backdrop-blur-md text-slate-700 hover:text-rose-500 flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition duration-200"
             title="Save to Wishlist"
+            aria-label="Save to Wishlist"
           >
             <Heart size={16} className={isWishlisted ? 'fill-rose-500 text-rose-500' : 'text-slate-600'} />
           </button>
         )}
 
         {/* Quick View Floating Action */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex justify-center">
+        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 hidden sm:flex justify-center">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -112,7 +114,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Body */}
-      <div className="p-4.5 flex flex-col flex-1 space-y-2.5">
+      <div className="p-3.5 sm:p-4.5 flex flex-col flex-1 space-y-2 sm:space-y-2.5">
         <div className="flex items-center justify-between text-xs">
           <span className="font-extrabold text-indigo-600 tracking-wider text-[11px] uppercase">{product.brand || 'Lumina'}</span>
           <div className="flex items-center gap-1 text-amber-600 font-black bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200/60">

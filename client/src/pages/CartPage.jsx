@@ -357,17 +357,17 @@ const CartPage = () => {
               {cartItems.map((item) => {
                 const id = item._id || item.id;
                 return (
-                  <div key={id} className="p-4.5 bg-white border border-slate-200/90 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs hover:border-indigo-500/30 transition">
-                    <div className="flex items-center gap-4">
-                      <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded-xl bg-slate-50 border border-slate-200 shrink-0" />
-                      <div className="space-y-1">
+                  <div key={id} className="p-3.5 sm:p-4.5 bg-white border border-slate-200/90 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4 shadow-2xs hover:border-indigo-500/30 transition">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                      <img src={item.image} alt={item.title} className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl bg-slate-50 border border-slate-200 shrink-0" />
+                      <div className="space-y-0.5 sm:space-y-1 min-w-0">
                         <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600">{item.brand || 'Lumina Genuine'}</span>
-                        <h4 className="font-extrabold text-sm text-slate-900 font-heading max-w-xs truncate">{item.title}</h4>
-                        <span className="text-base font-black text-slate-900 font-heading block">${Number(item.price).toFixed(2)}</span>
+                        <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 font-heading truncate">{item.title}</h4>
+                        <span className="text-sm sm:text-base font-black text-slate-900 font-heading block">${Number(item.price).toFixed(2)}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                       {/* Quantity Toggles */}
                       <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
                         <button
@@ -389,24 +389,26 @@ const CartPage = () => {
                         </button>
                       </div>
 
-                      <button
-                        onClick={() => {
-                          dispatch(toggleWishlist(item));
-                          dispatch(removeFromCart(id));
-                        }}
-                        className="p-2 text-slate-400 hover:text-rose-500 transition"
-                        title="Save to Wishlist"
-                      >
-                        <Heart size={18} />
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => {
+                            dispatch(toggleWishlist(item));
+                            dispatch(removeFromCart(id));
+                          }}
+                          className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-slate-50 transition"
+                          title="Save to Wishlist"
+                        >
+                          <Heart size={18} />
+                        </button>
 
-                      <button
-                        onClick={() => dispatch(removeFromCart(id))}
-                        className="p-2 text-slate-400 hover:text-rose-600 transition"
-                        title="Remove Item"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                        <button
+                          onClick={() => dispatch(removeFromCart(id))}
+                          className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition"
+                          title="Remove Item"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -416,7 +418,7 @@ const CartPage = () => {
 
           {/* Sticky Order Summary Panel */}
           <div className="lg:col-span-1">
-            <div className="p-6 bg-white border border-slate-200/90 rounded-3xl space-y-6 sticky top-24 shadow-sm">
+            <div className="p-4 sm:p-6 bg-white border border-slate-200/90 rounded-3xl space-y-5 sm:space-y-6 sticky top-24 shadow-sm">
               <h3 className="text-lg font-black font-heading text-slate-900 border-b border-slate-100 pb-3">Order Summary</h3>
 
               {/* Promo Code Coupon Form */}

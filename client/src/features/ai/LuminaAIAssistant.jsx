@@ -90,7 +90,7 @@ const LuminaAIAssistant = () => {
     <>
       {/* Floating Launcher Button */}
       {!isOpen && (
-        <div className="fixed bottom-20 md:bottom-7 right-6 z-50 group">
+        <div className="fixed bottom-20 md:bottom-7 right-4 sm:right-6 z-50 group">
           <div className="absolute -top-9 right-0 bg-slate-900 text-white text-[11px] font-bold px-3 py-1 rounded-xl shadow-lg border border-slate-700 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center gap-1.5">
             <Sparkles size={13} className="text-amber-400" />
             <span>Ask Lumina AI</span>
@@ -99,21 +99,21 @@ const LuminaAIAssistant = () => {
           <button
             onClick={() => dispatch(toggleChat())}
             aria-label="Open Lumina AI Assistant"
-            className="relative flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-700 text-white font-black text-xs rounded-2xl shadow-xl shadow-indigo-600/35 active:scale-95 transition-all duration-300 border border-white/20"
+            className="relative flex items-center gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-700 text-white font-black text-xs rounded-2xl shadow-xl shadow-indigo-600/35 active:scale-95 transition-all duration-300 border border-white/20"
           >
             <div className="relative">
               <Sparkles size={18} className="animate-spin-slow text-amber-300" />
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-indigo-700 animate-ping" />
             </div>
             <span className="hidden sm:inline-block tracking-wide">Lumina AI Concierge</span>
-            <span className="sm:hidden tracking-wide">AI</span>
+            <span className="sm:hidden tracking-wide">AI Concierge</span>
           </button>
         </div>
       )}
 
       {/* Slide-Up / Floating Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 w-[94vw] sm:w-[420px] max-w-full bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col font-body transition-all duration-300 animate-slideUp">
+        <div className="fixed bottom-20 md:bottom-6 right-2 sm:right-6 z-50 w-[calc(100vw-16px)] sm:w-[420px] max-w-full bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col font-body transition-all duration-300 animate-slideUp max-h-[calc(100vh-100px)] md:max-h-[640px]">
           {/* Header */}
           <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 px-4 py-3.5 text-white flex items-center justify-between border-b border-indigo-900/40">
             <div className="flex items-center gap-2.5">
@@ -150,7 +150,7 @@ const LuminaAIAssistant = () => {
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 max-h-[460px] min-h-[320px] overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+          <div className="flex-1 max-h-[50vh] sm:max-h-[460px] min-h-[260px] sm:min-h-[320px] overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-slate-50/50">
             {messages.map((msg) => {
               const isUser = msg.sender === 'user';
               return (

@@ -4,9 +4,9 @@ import { Sparkles, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
 
 const AboutPage = () => {
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-20 pt-4 px-4 font-body">
+    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12 pb-20 pt-4 px-3 sm:px-4 font-body">
       {/* Hero Header */}
-      <div className="text-center space-y-4 py-12 bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="text-center space-y-4 py-8 sm:py-12 bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl -z-0 pointer-events-none" />
 
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-xs font-black text-indigo-300 uppercase tracking-wider relative z-10">
@@ -75,8 +75,8 @@ const AboutPage = () => {
       </div>
 
       {/* Call to Action Banner */}
-      <div className="p-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl text-white space-y-4 text-center shadow-xl">
-        <h2 className="text-2xl md:text-3xl font-black font-heading">Ready to Experience Smarter Shopping?</h2>
+      <div className="p-6 sm:p-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl text-white space-y-4 text-center shadow-xl">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-black font-heading">Ready to Experience Smarter Shopping?</h2>
         <p className="text-xs md:text-sm text-indigo-100 max-w-lg mx-auto font-medium">
           Discover thousands of verified products or start selling on LuminaMarket's next-generation platform.
         </p>

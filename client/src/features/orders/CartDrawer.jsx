@@ -33,7 +33,7 @@ const CartDrawer = () => {
 
   return (
     <div className="modal-overlay" onClick={() => dispatch(closeModal())}>
-      <div className="modal-card max-w-xl w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-card max-w-xl w-full p-4 sm:p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-700">
           <div className="flex items-center gap-2">
             <ShoppingBag className="text-indigo-400" size={22} />
@@ -98,7 +98,7 @@ const CartDrawer = () => {
                 <span>Shipping Address</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <input
                   type="text"
                   required
@@ -126,7 +126,7 @@ const CartDrawer = () => {
                 onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
               />
 
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <input
                   type="text"
                   required

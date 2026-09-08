@@ -21,74 +21,74 @@ const SellerOrdersPage = () => {
   const deliveredCount = allOrders.filter(o => o.orderStatus === 'Delivered').length;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-10">
+    <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 pb-20 md:pb-10 px-2 sm:px-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center">
-            <Store size={24} />
+          <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center shrink-0">
+            <Store size={22} />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold font-heading text-slate-100">Merchant Order Management</h1>
-            <p className="text-sm text-slate-400">Manage customer fulfillment, update tracking status, and monitor Razorpay revenue</p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-slate-100">Merchant Order Management</h1>
+            <p className="text-xs sm:text-sm text-slate-400">Manage customer fulfillment, update tracking status, and monitor Razorpay revenue</p>
           </div>
         </div>
 
-        <button className="btn btn-secondary text-xs py-2 px-4 flex items-center gap-2 rounded-xl" onClick={() => dispatch(fetchAllOrdersAdmin())}>
+        <button className="btn btn-secondary text-xs py-2 px-3 sm:px-4 flex items-center gap-2 rounded-xl" onClick={() => dispatch(fetchAllOrdersAdmin())}>
           <RefreshCw size={14} /> Refresh Orders
         </button>
       </div>
 
       {/* Merchant Order Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-400">
-            <Package size={20} />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-3.5 sm:p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-400 shrink-0">
+            <Package size={18} />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">Total Store Orders</span>
-            <h3 className="text-xl font-extrabold">{allOrders.length}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Total Orders</span>
+            <h3 className="text-lg sm:text-xl font-extrabold">{allOrders.length}</h3>
           </div>
         </div>
 
-        <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
-            <Clock size={20} />
+        <div className="p-3.5 sm:p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
+            <Clock size={18} />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">Pending Processing</span>
-            <h3 className="text-xl font-extrabold text-amber-400">{processingCount}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Processing</span>
+            <h3 className="text-lg sm:text-xl font-extrabold text-amber-400">{processingCount}</h3>
           </div>
         </div>
 
-        <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/15 flex items-center justify-center text-cyan-400">
-            <Truck size={20} />
+        <div className="p-3.5 sm:p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/15 flex items-center justify-center text-cyan-400 shrink-0">
+            <Truck size={18} />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">In Transit (Shipped)</span>
-            <h3 className="text-xl font-extrabold text-cyan-400">{shippedCount}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">In Transit</span>
+            <h3 className="text-lg sm:text-xl font-extrabold text-cyan-400">{shippedCount}</h3>
           </div>
         </div>
 
-        <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
-            <DollarSign size={20} />
+        <div className="p-3.5 sm:p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">
+            <DollarSign size={18} />
           </div>
           <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">Total Revenue</span>
-            <h3 className="text-xl font-extrabold text-emerald-400">${totalRevenue.toFixed(2)}</h3>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Revenue</span>
+            <h3 className="text-lg sm:text-xl font-extrabold text-emerald-400">${totalRevenue.toFixed(2)}</h3>
           </div>
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="glass-panel p-6 overflow-x-auto">
+      <div className="glass-panel p-4 sm:p-6 overflow-x-auto rounded-2xl sm:rounded-3xl">
         {loading ? (
           <div className="py-8 text-center text-slate-400">Loading store orders...</div>
         ) : allOrders.length === 0 ? (
           <div className="py-12 text-center text-slate-400">No customer orders placed yet.</div>
         ) : (
-          <table className="w-full text-left text-xs text-slate-300 border-collapse">
+          <table className="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
             <thead>
               <tr className="border-b border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
                 <th className="p-3">Order Details</th>
