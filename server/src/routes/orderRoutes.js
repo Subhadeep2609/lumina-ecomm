@@ -16,8 +16,8 @@ router.post('/razorpay', createRazorpayOrder);
 router.post('/verify', verifyPaymentAndCreateOrder);
 router.get('/my-orders', getMyOrders);
 
-// Admin & Seller Management
-router.get('/', authorize('admin', 'seller'), getAllOrders);
-router.put('/:id/status', authorize('admin', 'seller'), updateOrderStatus);
+// Respective Seller Order Fulfillment Management (Admin access blocked)
+router.get('/', authorize('seller'), getAllOrders);
+router.put('/:id/status', authorize('seller'), updateOrderStatus);
 
 export default router;

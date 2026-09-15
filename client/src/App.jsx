@@ -58,11 +58,11 @@ const App = () => {
               }
             />
 
-            {/* Seller & Admin Order Fulfillment Route */}
+            {/* Respective Seller Order Fulfillment Route (Seller only) */}
             <Route
               path="/seller/orders"
               element={
-                <ProtectedRoute allowedRoles={['seller', 'admin']}>
+                <ProtectedRoute allowedRoles={['seller']}>
                   <SellerOrdersPage />
                 </ProtectedRoute>
               }

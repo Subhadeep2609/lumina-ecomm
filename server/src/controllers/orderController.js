@@ -138,26 +138,84 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-// @desc    Get all orders (Admin / Seller)
+// @desc    Get orders for respective seller (Only products listed by this seller)
 // @route   GET /api/v1/orders
-// @access  Private (Admin, Seller)
+// @access  Private (Seller only)
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate('user', 'name email role')
-      .sort('-createdAt');
+    if (req.user.role !== 'seller') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin access to customer order fulfillment is restricted. Only respective sellers can view their order details.'
+      });
+    }
 
-    return res.status(200).json({ success: true, count: orders.length, orders });
+    // 1. Fetch all products listed by this seller
+    const userId = req.user._id || req.user.id;
+    let sellerProducts = [];
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      sellerProducts = await Product.find({ user: userId }).select('_id');
+    }
+    const sellerProductIds = new Set(sellerProducts.map((p) => p._id.toString()));
+
+    if (sellerProductIds.size === 0) {
+      return res.status(200).json({ success: true, count: 0, orders: [] });
+    }
+
+    // 2. Find orders containing items for this seller's products
+    const rawOrders = await Order.find({
+      'orderItems.product': { $in: Array.from(sellerProductIds) }
+    })
+      .populate('user', 'name email role')
+      .sort('-createdAt')
+      .lean();
+
+    // 3. Filter orderItems to only include products listed by this seller and recalculate seller-specific total
+    const sellerOrders = rawOrders
+      .map((order) => {
+        const matchingItems = (order.orderItems || []).filter((item) => {
+          const pId = item.product?._id ? item.product._id.toString() : item.product?.toString();
+          return sellerProductIds.has(pId);
+        });
+
+        if (matchingItems.length === 0) return null;
+
+        const sellerRevenue = matchingItems.reduce(
+          (sum, item) => sum + (Number(item.price || 0) * Number(item.quantity || 1)),
+          0
+        );
+
+        return {
+          ...order,
+          orderItems: matchingItems,
+          totalPrice: sellerRevenue,
+          sellerTotalPrice: sellerRevenue
+        };
+      })
+      .filter(Boolean);
+
+    return res.status(200).json({
+      success: true,
+      count: sellerOrders.length,
+      orders: sellerOrders
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Update Order Fulfillment Status (Admin / Seller)
+// @desc    Update Order Fulfillment Status (Seller Only for their listed items)
 // @route   PUT /api/v1/orders/:id/status
-// @access  Private (Admin, Seller)
+// @access  Private (Seller only)
 export const updateOrderStatus = async (req, res) => {
   try {
+    if (req.user.role !== 'seller') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin access to customer order fulfillment is restricted. Only respective sellers can manage orders.'
+      });
+    }
+
     const { orderStatus } = req.body;
     if (!['Processing', 'Shipped', 'Delivered', 'Cancelled'].includes(orderStatus)) {
       return res.status(400).json({ success: false, message: 'Invalid order status value.' });
@@ -165,6 +223,26 @@ export const updateOrderStatus = async (req, res) => {
 
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+
+    // Verify this seller owns at least one product listed in this order
+    const userId = req.user._id || req.user.id;
+    let sellerProducts = [];
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      sellerProducts = await Product.find({ user: userId }).select('_id');
+    }
+    const sellerProductIds = new Set(sellerProducts.map((p) => p._id.toString()));
+
+    const hasSellerProduct = (order.orderItems || []).some((item) => {
+      const pId = item.product?._id ? item.product._id.toString() : item.product?.toString();
+      return sellerProductIds.has(pId);
+    });
+
+    if (!hasSellerProduct) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to modify orders for products listed by other sellers.'
+      });
+    }
 
     order.orderStatus = orderStatus;
     if (orderStatus === 'Delivered') {

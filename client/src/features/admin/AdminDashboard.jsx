@@ -4,8 +4,7 @@ import { openModal } from '../ui/uiSlice.js';
 import { deleteProduct, fetchProducts } from '../products/productSlice.js';
 import { apiCall } from '../../utils/api.js';
 import UserManagement from './UserManagement.jsx';
-import AdminOrders from './AdminOrders.jsx';
-import { Shield, Package, Users, DollarSign, PlusCircle, Edit3, Trash2, Layers, AlertCircle, RefreshCw, ShoppingBag } from 'lucide-react';
+import { Shield, Package, Users, DollarSign, PlusCircle, Edit3, Trash2, Layers, AlertCircle, RefreshCw } from 'lucide-react';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -50,7 +49,7 @@ const AdminDashboard = () => {
             <h1 className="text-xl sm:text-2xl md:text-3xl font-black font-heading text-slate-900 tracking-tight">Admin Control Dashboard</h1>
           </div>
           <p className="text-xs md:text-sm text-slate-500 font-medium">
-            Role-Based Access Control (RBAC), Global Orders & Product Catalog Management
+            Role-Based Access Control (RBAC), User Management & Product Catalog Control
           </p>
         </div>
 
@@ -63,14 +62,7 @@ const AdminDashboard = () => {
           >
             <Package size={14} /> Catalog ({products.length})
           </button>
-          <button
-            className={`text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition flex items-center gap-1.5 ${
-              activeTab === 'orders' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-            }`}
-            onClick={() => setActiveTab('orders')}
-          >
-            <ShoppingBag size={14} /> Orders
-          </button>
+
           <button
             className={`text-xs font-extrabold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition flex items-center gap-1.5 ${
               activeTab === 'users' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -206,8 +198,6 @@ const AdminDashboard = () => {
             </table>
           )}
         </div>
-      ) : activeTab === 'orders' ? (
-        <AdminOrders />
       ) : (
         <UserManagement />
       )}

@@ -28,8 +28,8 @@ const SellerOrdersPage = () => {
             <Store size={22} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-slate-100">Merchant Order Management</h1>
-            <p className="text-xs sm:text-sm text-slate-400">Manage customer fulfillment, update tracking status, and monitor Razorpay revenue</p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-slate-100">Seller Order Management</h1>
+            <p className="text-xs sm:text-sm text-slate-400">Manage fulfillment, update shipping status, and track revenue for products listed by your account</p>
           </div>
         </div>
 
@@ -45,7 +45,7 @@ const SellerOrdersPage = () => {
             <Package size={18} />
           </div>
           <div>
-            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Total Orders</span>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Your Orders</span>
             <h3 className="text-lg sm:text-xl font-extrabold">{allOrders.length}</h3>
           </div>
         </div>
@@ -75,7 +75,7 @@ const SellerOrdersPage = () => {
             <DollarSign size={18} />
           </div>
           <div>
-            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Revenue</span>
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block">Your Revenue</span>
             <h3 className="text-lg sm:text-xl font-extrabold text-emerald-400">${totalRevenue.toFixed(2)}</h3>
           </div>
         </div>
@@ -86,15 +86,15 @@ const SellerOrdersPage = () => {
         {loading ? (
           <div className="py-8 text-center text-slate-400">Loading store orders...</div>
         ) : allOrders.length === 0 ? (
-          <div className="py-12 text-center text-slate-400">No customer orders placed yet.</div>
+          <div className="py-12 text-center text-slate-400">No customer orders placed for your listed products yet.</div>
         ) : (
           <table className="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
             <thead>
               <tr className="border-b border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
                 <th className="p-3">Order Details</th>
                 <th className="p-3">Customer & Shipping Address</th>
-                <th className="p-3">Purchased Items</th>
-                <th className="p-3">Razorpay Payment</th>
+                <th className="p-3">Your Listed Items</th>
+                <th className="p-3">Your Revenue</th>
                 <th className="p-3">Fulfillment Status</th>
               </tr>
             </thead>

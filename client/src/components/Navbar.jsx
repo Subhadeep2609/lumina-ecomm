@@ -331,7 +331,7 @@ const Navbar = () => {
                   </Link>
                 )}
 
-                {(user.role === 'seller' || user.role === 'admin') && (
+                {user.role === 'seller' && (
                   <Link to="/seller/orders" className="flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 font-semibold text-purple-700" onClick={() => setAccountMenuOpen(false)}>
                     <Store size={15} /> Manage Orders
                   </Link>

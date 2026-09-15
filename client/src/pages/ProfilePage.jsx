@@ -456,18 +456,35 @@ const ProfilePage = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link
-                to={user.role === 'seller' || user.role === 'admin' ? '/seller/orders' : '/orders'}
-                className="p-5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-2xl flex items-center gap-3 transition"
-              >
-                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
-                  <ShoppingBag size={20} />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm text-slate-900 font-heading">My Orders & Fulfillment</h4>
-                  <p className="text-xs text-slate-500">Track current purchases or fulfill seller orders</p>
-                </div>
-              </Link>
+              {user.role === 'seller' && (
+                <Link
+                  to="/seller/orders"
+                  className="p-5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-2xl flex items-center gap-3 transition"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold">
+                    <ShoppingBag size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-sm text-slate-900 font-heading">Store Orders & Fulfillment</h4>
+                    <p className="text-xs text-slate-500">Fulfill orders placed for your listed products</p>
+                  </div>
+                </Link>
+              )}
+
+              {user.role === 'user' && (
+                <Link
+                  to="/orders"
+                  className="p-5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-2xl flex items-center gap-3 transition"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
+                    <ShoppingBag size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-sm text-slate-900 font-heading">My Orders & Tracking</h4>
+                    <p className="text-xs text-slate-500">Track current purchases and delivery status</p>
+                  </div>
+                </Link>
+              )}
 
               {user.role === 'seller' && (
                 <Link
